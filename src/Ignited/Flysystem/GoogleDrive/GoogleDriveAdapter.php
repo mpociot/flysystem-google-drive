@@ -372,10 +372,18 @@ class GoogleDriveAdapter extends AbstractAdapter
             'q' => $q,
         ))->getItems();
 
-        if (count($files) == 0) {
+        try {
+            $files = $this->service->files->listFiles(array(
+                'q' => $q,
+            ))->getItems();
+            if (count($files) == 0) {
+                return null;
+            } else {
+                return $files[0]->id;
+            }
+        } catch( \Exception $e )
+        {
             return null;
-        } else {
-            return $files[0]->id;
         }
     }
 
